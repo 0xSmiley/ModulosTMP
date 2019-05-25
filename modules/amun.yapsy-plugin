@@ -1,0 +1,6 @@
+[Core]
+Name = amun
+Module = amun
+
+[Documentation]
+Description = amun plugin

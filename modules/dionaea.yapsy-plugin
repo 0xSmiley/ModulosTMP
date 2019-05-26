@@ -1,0 +1,6 @@
+[Core]
+Name = dionaea
+Module = dionaea
+
+[Documentation]
+Description = Dionaea plugin

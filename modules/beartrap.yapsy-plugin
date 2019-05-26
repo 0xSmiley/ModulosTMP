@@ -1,0 +1,6 @@
+[Core]
+Name = beartrap
+Module = beartrap
+
+[Documentation]
+Description = Beatrap plugin

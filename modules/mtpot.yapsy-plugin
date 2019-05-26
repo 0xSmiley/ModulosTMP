@@ -1,0 +1,6 @@
+[Core]
+Name = mtpot
+Module = mtpot
+
+[Documentation]
+Description = mtpot plugin

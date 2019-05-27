@@ -50,6 +50,7 @@ def simpleServerHttp(target, ret):
         s.bind(("0.0.0.0", port))
     except socket.error as msg:
         print 'Bind failed. Error Code : ' + str(msg[0]) + ' Message ' + msg[1]
+        return
 
     s.settimeout(3)
     try:
@@ -93,10 +94,14 @@ class DefaultNginxVersion():
 
     @staticmethod
     def run(ip):
-        r = requests.get("http://%s/" % (ip))
+        try:
+            r = requests.get("http://%s/" % (ip), verify=False)
 
-        if r.headers['Server'] == 'nginx/1.3.8':
-            return True
+            if r.headers['Server'] == 'nginx/1.3.8':
+                return True
+    
+        except Exception:
+            pass
 
         return False
 
@@ -142,9 +147,11 @@ class RFIteste():
         t = threading.Thread(
             name="Sever", target=simpleServerHttp, args=(ident, resp))
         t.start()
-
-        requests.get("http://%s/%s?%s=http://%s/%s" %
-                     (ip, path, args, myIp, ident))
+        try:
+            requests.get("http://%s/%s?%s=http://%s/%s" %
+                        (ip, path, args, myIp, ident), verify=False)
+        except Exception:
+            pass
 
         t.join()
 
@@ -177,12 +184,15 @@ class PHPteste():
     def run(ip):
         path = randomString(random.randrange(10))
         args = randomString(random.randrange(5))
-        r = requests.get("http://%s/%s" % (ip, path),
-                         params={args: 'echo(system("uptime"))'})
+        try:
+            r = requests.get("http://%s/%s" % (ip, path),
+                            params={args: 'echo(system("uptime"))'}, verify=False)
 
-        if r.status_code == 200 and len(r.text) == 0:
-            return True
-        else:
+            if r.status_code == 200 and len(r.text) == 0:
+                return True
+            else:
+                return False
+        except Exception:
             return False
 
 
@@ -212,20 +222,23 @@ class SQLiteste():
     def run(ip):
         path = randomString(random.randrange(10))
         args = randomString(random.randrange(5))
-        r = requests.get("http://%s/%s" % (ip, path),
-                         params={args: '1 UNION SELECT 1,2,3,4'})
+        
+        try:
+            r = requests.get("http://%s/%s" % (ip, path),
+                            params={args: '1 UNION SELECT 1,2,3,4'}, verify=False)
 
-        response = ['You have an error in your SQL syntax; check the manual',
-                    'that corresponds to your MySQL server version for the',
-                    'right syntax to use near  at line 1']
+            response = ['You have an error in your SQL syntax; check the manual',
+                        'that corresponds to your MySQL server version for the',
+                        'right syntax to use near  at line 1']
 
-        resp = True
+            resp = True
 
-        for i in response:
-            resp = resp and (i in response)
-            print resp
-
-        return resp
+            for i in response:
+                resp = resp and (i in r.text)
+            
+            return resp
+        except Exception:
+            return False
 
 
 class Tanner(IPlugin):

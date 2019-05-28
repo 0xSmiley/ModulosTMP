@@ -259,7 +259,7 @@ class Tanner(IPlugin):
 
     @staticmethod
     def run(ip):
-        result = []
+        result = {}
         for i in Tanner.__test_list:
             result[i.get_name()] = i.run(ip)
         return result

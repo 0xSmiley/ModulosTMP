@@ -157,9 +157,9 @@ class Cowrie(IPlugin):
 
     @staticmethod
     def run(ip):
-        result = []
+        result = {}
         for i in Cowrie.__test_list:
-            result.append(i.run(ip))
+            result[i.get_name()] = i.run(ip)
         return result
 
 if __name__ == "__main__":

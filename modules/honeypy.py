@@ -70,7 +70,7 @@ class Honeypy(IPlugin):
 
     @staticmethod
     def run(ip):
-        list = []
+        list = {}
         for i in Honeypy.__test_list:
-            list.append(i.run(ip))
+            list[i.get_name()] = i.run(ip)
         return list

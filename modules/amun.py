@@ -167,9 +167,9 @@ class Amun(IPlugin):
 
     @staticmethod
     def run(ip):
-        list = []
+        list = {}
         for i in Amun.__test_list:
-            list.append(i.run(ip))
+            list[i.get_name()] = i.run(ip)
         return list
 
 if __name__ == "__main__":

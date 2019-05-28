@@ -261,5 +261,5 @@ class Tanner(IPlugin):
     def run(ip):
         result = []
         for i in Tanner.__test_list:
-            result.append(i.run(ip))
+            result[i.get_name()] = i.run(ip)
         return result

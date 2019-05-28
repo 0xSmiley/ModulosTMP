@@ -42,8 +42,7 @@ class Ret:
         self.result = True
 
 
-def simpleServerHttp(target, ret):
-    port = random.randint(1025, 7777)
+def simpleServerHttp(target, ret, port):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     try:
@@ -55,7 +54,7 @@ def simpleServerHttp(target, ret):
     s.settimeout(3)
     try:
         s.listen(2)
-        con, = s.accept()
+        con, _ = s.accept()
         data = con.recv(4096)
 
         if target in data and "aiohttp" in data:
@@ -141,15 +140,16 @@ class RFIteste():
         args = randomString(random.randrange(5))
         ident = randomString(random.randrange(10))
         myIp = RFIteste.get_ip()
+        port = random.randint(1025, 7777)
 
         resp = Ret()
 
         t = threading.Thread(
-            name="Sever", target=simpleServerHttp, args=(ident, resp))
+            name="Sever", target=simpleServerHttp, args=(ident, resp, port))
         t.start()
         try:
-            requests.get("http://%s/%s?%s=http://%s/%s" %
-                        (ip, path, args, myIp, ident), verify=False)
+            requests.get("http://%s/%s?%s=http://%s:%d/%s" %
+                        (ip, path, args, myIp,port, ident), verify=False)
         except Exception:
             pass
 
@@ -227,9 +227,7 @@ class SQLiteste():
             r = requests.get("http://%s/%s" % (ip, path),
                             params={args: '1 UNION SELECT 1,2,3,4'}, verify=False)
 
-            response = ['You have an error in your SQL syntax; check the manual',
-                        'that corresponds to your MySQL server version for the',
-                        'right syntax to use near  at line 1']
+            response = ['You have an error in your SQL syntax; check the manual',]
 
             resp = True
 

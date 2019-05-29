@@ -26,7 +26,7 @@ class TELNETTest():
     @staticmethod
     def run(ip):
         banners = [
-            b'\xff\xfb\x01\xff\xfb\x03\xff\xfc\'\xff\xfe\x01\xff\xfd\x03\xff\xfe"\xff\xfd\'\xff\xfd\x18\xff\xfe\x1fUsername',
+            b'\xff\xfb\x01\xff\xfb\x03\xff\xfc\'\xff\xfe\x01\xff\xfd\x03\xff\xfe"\xff\xfd\'\xff\xfd\x18\xff\xfe\x1f',
             b'\xff\xfb\x01\xff\xfb\x03',
             b'\xff\xfb\x01'
         ]
@@ -46,7 +46,7 @@ class TELNETTest():
                 r = soc.recv(max_length)
                 soc.close()
                 for i in banners:
-                    if i in r:
+                    if i in r and 'Username' in r:
                         return True  
             except socket.error:
                 pass

@@ -30,23 +30,25 @@ class TELNETTest():
             b'\xff\xfb\x01\xff\xfb\x03',
             b'\xff\xfb\x01'
         ]
+        
+        blcaklist = b'\xff\xfb\x03\xff\xfb\x01\xff\xfd\x1f\xff\xfd\x18\r\nlogin: '
 
         for j in TELNETTest.__port:
             try:
                 soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 soc.settimeout(2)
                 soc.connect((ip, j))
-                """
+                
                 max_length = len(banners[0])
                 
                 for i in banners:
                     if max_length < len(i):
                         max_length = len(i)
-                """
-                r = soc.recv(1024)
+                
+                r = soc.recv(max_length)
                 soc.close()
                 for i in banners:
-                    if i in r and 'Username' in r:
+                    if i in r and blcaklist not in r:
                         return True  
             except socket.error:
                 pass
